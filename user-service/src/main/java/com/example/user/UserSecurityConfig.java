@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static com.example.user.UserConstants.*;
@@ -26,7 +24,9 @@ public class UserSecurityConfig {
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers(POST,"/user").permitAll()
                 .requestMatchers("/user/**").hasAuthority(USER_AUTHORITY)
+                //.requestMatchers(POST,"/transact").permitAll()
                 .requestMatchers(POST,"/admin").hasAnyAuthority(ADMIN_AUTHORITY,SERVICE_AUTHORITY)
+                .requestMatchers("/delete").permitAll()
                 .anyRequest().authenticated()
         ).httpBasic(httpBasic -> {
         }).csrf(CsrfConfigurer::disable)
@@ -43,9 +43,6 @@ public class UserSecurityConfig {
         return authenticationManagerBuilder.build();
     }
 
-    @Bean
-    PasswordEncoder getPE(){
-        return new BCryptPasswordEncoder();
-    }
+
 
 }

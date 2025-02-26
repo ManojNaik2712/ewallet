@@ -1,5 +1,6 @@
 package com.example.user;
 
+import com.example.utils.UserIdentifier;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.user.UserConstants.AUTHORITY_DELIMITER;
