@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -14,17 +15,21 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/user")
+
+    @PostMapping("/register")
     public ResponseEntity createUser(@RequestBody UserCreateRequest userCreateRequest) throws JsonProcessingException {
         userService.createUser(userCreateRequest);
         return new ResponseEntity("User created succesfully", HttpStatus.CREATED);
-
     }
-    @GetMapping("/user")
-    public User getUserDetails(){
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        User user= (User) authentication.getPrincipal();
-        return userService.loadUserByUsername(user.getUsername());
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginDTO loginDTO){
+        return userService.verify(loginDTO);
+    }
+
+    @GetMapping("/userdetail/{username}")
+    public User getUserDetails(@PathVariable String username){
+        return userService.getUserDetail(username);
     }
 
     @GetMapping("/admin/all/users")
