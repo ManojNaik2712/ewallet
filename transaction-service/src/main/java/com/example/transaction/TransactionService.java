@@ -37,7 +37,7 @@ public class TransactionService {
                 .reason(reason)
                 .transactionStatusEnum(TransactionStatusEnum.PENDING).build();
         transactionRepository.save(transaction);
-        
+
         CompletableFuture<String> future=new CompletableFuture<>();
         pendingRequests.put(transaction.getTransactionId(),future);
 
@@ -51,7 +51,7 @@ public class TransactionService {
         kafkaTemplate.send(TRANSACTION_CREATED_TOPIC,objectMapper.writeValueAsString(jsonObject));
 
         try{
-            String response= future.get(30, TimeUnit.SECONDS);
+            String response= future.get(60, TimeUnit.MINUTES);
             return response;
         } catch (Exception e){
             pendingRequests.remove(transaction.getTransactionId());
